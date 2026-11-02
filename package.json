@@ -6,7 +6,9 @@
     "scripts": {
         "start": "webpack serve --open --config ./webpack.config.js --env mode=dev",
         "build": "webpack --config ./webpack.config.js --env mode=prod",
-        "lint": "eslint . --ext .ts"
+        "lint": "eslint . --ext .ts",
+        "lint:fix": "eslint . --ext .ts --fix",
+        "typecheck": "tsc --noEmit"
     },
     "repository": {
         "type": "git",
@@ -18,6 +20,8 @@
     "homepage": "",
     "devDependencies": {
         "@types/node": "^26.6.6",
+        "@typescript-eslint/eslint-plugin": "^8.72.1",
+        "@typescript-eslint/parser": "^8.72.1",
         "clean-webpack-plugin": "^4.0.0",
         "copy-webpack-plugin": "^12.0.2",
         "css-loader": "^6.10.0",

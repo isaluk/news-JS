@@ -1,21 +1,22 @@
-class Loader {
-    constructor(baseLink, options) {
-        this.baseLink = baseLink;
-        this.options = options;
-    }
+import { Callback, Endpoint, HttpMethod, HttpStatus, QueryOptions, RequestParams } from '../../types';
 
-    getResp(
-        { endpoint, options = {} },
-        callback = () => {
+class Loader {
+    constructor(
+        private readonly baseLink: string,
+        private readonly options: Readonly<Partial<QueryOptions>>
+    ) {}
+    protected getResp<T>(
+        { endpoint, options = {} }: RequestParams,
+        callback: Callback<T> = (): void => {
             console.error('No callback for GET response');
         }
-    ) {
-        this.load('GET', endpoint, callback, options);
+    ): void {
+        this.load<T>('GET', endpoint, callback, options);
     }
 
-    errorHandler(res) {
+    private errorHandler(res: Response): Response {
         if (!res.ok) {
-            if (res.status === 401 || res.status === 404)
+            if (res.status === HttpStatus.Unauthorized || res.status === HttpStatus.NotFound)
                 console.log(`Sorry, but there is ${res.status} error: ${res.statusText}`);
             throw Error(res.statusText);
         }
@@ -23,23 +24,28 @@ class Loader {
         return res;
     }
 
-    makeUrl(options, endpoint) {
-        const urlOptions = { ...this.options, ...options };
-        let url = `${this.baseLink}${endpoint}?`;
+    private makeUrl(options: Partial<QueryOptions>, endpoint: Endpoint): string {
+        const urlOptions: Partial<QueryOptions> = { ...this.options, ...options };
+        const url = new URL(endpoint, this.baseLink);
 
-        Object.keys(urlOptions).forEach((key) => {
-            url += `${key}=${urlOptions[key]}&`;
+        Object.entries(urlOptions).forEach(([key, value]) => {
+            if (value) url.searchParams.set(key, value);
         });
 
-        return url.slice(0, -1);
+        return url.toString();
     }
 
-    load(method, endpoint, callback, options = {}) {
+    private load<T>(
+        method: HttpMethod,
+        endpoint: Endpoint,
+        callback: Callback<T>,
+        options: Partial<QueryOptions>
+    ): void {
         fetch(this.makeUrl(options, endpoint), { method })
-            .then(this.errorHandler)
-            .then((res) => res.json())
-            .then((data) => callback(data))
-            .catch((err) => console.error(err));
+            .then((res: Response) => this.errorHandler(res))
+            .then((res: Response): Promise<T> => res.json())
+            .then((data: T) => callback(data))
+            .catch((err: unknown) => console.error(err));
     }
 }
 

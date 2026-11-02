@@ -1,38 +1,23 @@
 import AppLoader from './appLoader';
+import { Callback, Endpoint, NewsResponse, SourcesResponse } from '../../types';
 
 class AppController extends AppLoader {
-    getSources(callback) {
-        super.getResp(
-            {
-                endpoint: 'sources',
-            },
-            callback
-        );
+    public getSources(callback: Callback<SourcesResponse>): void {
+        this.getResp<SourcesResponse>({ endpoint: Endpoint.Sources }, callback);
     }
 
-    getNews(e, callback) {
-        let target = e.target;
-        const newsContainer = e.currentTarget;
+    public getNews(event: MouseEvent, callback: Callback<NewsResponse>): void {
+        const sourcesContainer = event.currentTarget;
+        const target = event.target;
 
-        while (target !== newsContainer) {
-            if (target.classList.contains('source__item')) {
-                const sourceId = target.getAttribute('data-source-id');
-                if (newsContainer.getAttribute('data-source') !== sourceId) {
-                    newsContainer.setAttribute('data-source', sourceId);
-                    super.getResp(
-                        {
-                            endpoint: 'everything',
-                            options: {
-                                sources: sourceId,
-                            },
-                        },
-                        callback
-                    );
-                }
-                return;
-            }
-            target = target.parentNode;
-        }
+        if (!(sourcesContainer instanceof HTMLElement) || !(target instanceof Element)) return;
+
+        const sourceId = target.closest<HTMLElement>('.source__item')?.dataset.sourceId;
+
+        if (!sourceId || sourcesContainer.dataset.source === sourceId) return;
+
+        sourcesContainer.dataset.source = sourceId;
+        this.getResp<NewsResponse>({ endpoint: Endpoint.Everything, options: { sources: sourceId } }, callback);
     }
 }
 

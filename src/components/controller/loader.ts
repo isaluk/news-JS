@@ -6,12 +6,12 @@ class Loader {
         private readonly options: Readonly<Partial<QueryOptions>>
     ) {}
     protected getResp<T>(
-        { endpoint, options = {} }: RequestParams,
+        params: RequestParams,
         callback: Callback<T> = (): void => {
             console.error('No callback for GET response');
         }
     ): void {
-        this.load<T>('GET', endpoint, callback, options);
+        this.load<T>('GET', params, callback);
     }
 
     private errorHandler(res: Response): Response {
@@ -35,17 +35,25 @@ class Loader {
         return url.toString();
     }
 
+    private isAbortError(err: unknown): boolean {
+        return err instanceof DOMException && err.name === 'AbortError';
+    }
+
     private load<T>(
         method: HttpMethod,
-        endpoint: Endpoint,
-        callback: Callback<T>,
-        options: Partial<QueryOptions>
+        { endpoint, options = {}, signal, onError }: RequestParams,
+        callback: Callback<T>
     ): void {
-        fetch(this.makeUrl(options, endpoint), { method })
+        fetch(this.makeUrl(options, endpoint), { method, signal })
             .then((res: Response) => this.errorHandler(res))
             .then((res: Response): Promise<T> => res.json())
             .then((data: T) => callback(data))
-            .catch((err: unknown) => console.error(err));
+            .catch((err: unknown) => {
+                if (this.isAbortError(err)) return;
+
+                console.error(err);
+                onError?.();
+            });
     }
 }
 

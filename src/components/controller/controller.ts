@@ -2,6 +2,8 @@ import AppLoader from './appLoader';
 import { Callback, Endpoint, NewsResponse, SourcesResponse } from '../../types';
 
 class AppController extends AppLoader {
+    private newsRequest: AbortController | null = null;
+
     public getSources(callback: Callback<SourcesResponse>): void {
         this.getResp<SourcesResponse>({ endpoint: Endpoint.Sources }, callback);
     }
@@ -16,8 +18,21 @@ class AppController extends AppLoader {
 
         if (!sourceId || sourcesContainer.dataset.source === sourceId) return;
 
+        this.newsRequest?.abort();
+        this.newsRequest = new AbortController();
+
         sourcesContainer.dataset.source = sourceId;
-        this.getResp<NewsResponse>({ endpoint: Endpoint.Everything, options: { sources: sourceId } }, callback);
+        this.getResp<NewsResponse>(
+            {
+                endpoint: Endpoint.Everything,
+                options: { sources: sourceId },
+                signal: this.newsRequest.signal,
+                onError: (): void => {
+                    delete sourcesContainer.dataset.source;
+                },
+            },
+            callback
+        );
     }
 }
 

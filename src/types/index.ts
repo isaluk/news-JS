@@ -59,6 +59,8 @@ export interface QueryOptions {
 export interface RequestParams {
     endpoint: Endpoint;
     options?: Partial<QueryOptions>;
+    signal?: AbortSignal;
+    onError?: () => void;
 }
 
 export type Callback<T> = (data: T) => void;

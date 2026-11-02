@@ -8,6 +8,7 @@ export class AppView {
 
     public drawNews(data: Partial<NewsResponse>): void {
         this.news.draw(data.articles ?? []);
+        this.sources.highlightActive();
     }
 
     public drawSources(data: Partial<SourcesResponse>): void {

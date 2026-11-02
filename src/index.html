@@ -1,49 +1,122 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <title>NewsPortal</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Manrope:wght@500;600;700;800&display=swap"
+            rel="stylesheet"
+        />
     </head>
     <body>
-        <header>
-            <h1>News Portal</h1>
-        </header>
-        <main>
-            <div class="sources buttons"></div>
+        <div class="sheet">
+            <header class="hero">
+                <p class="hero__label">(all the news that matters)</p>
+                <h1 class="hero__title">
+                    <span class="hero__word">(news</span>
+                    <span class="hero__word">portal)</span>
+                </h1>
+                <p class="hero__script">follow the thread of every story</p>
+                <div class="hero__info">
+                    <ul class="hero__list">
+                        <li>× pick a source</li>
+                        <li>× read 10 latest stories</li>
+                        <li>× go on to the original</li>
+                    </ul>
+                    <a class="hero__cta" href="#sources">choose a source</a>
+                    <ul class="hero__list hero__list--secondary">
+                        <li>× sources from all over the world</li>
+                        <li>× updated by NewsAPI</li>
+                        <li>× from any device</li>
+                    </ul>
+                </div>
+            </header>
+
+            <section class="sources-section" id="sources">
+                <div class="sources-section__head">
+                    <h2 class="section-title">
+                        <span class="section-title__number">(01.)</span>
+                        pick a source
+                    </h2>
+                    <p class="sources-section__note">scroll the list × <span class="sources-count"></span> total</p>
+                </div>
+                <div class="sources buttons"></div>
+            </section>
+        </div>
+
+        <main class="news-section">
+            <div class="news-section__head">
+                <p class="news-section__number">(02.)</p>
+                <h2 class="news-section__title">latest stories</h2>
+                <p class="news-section__subtitle">choose a source above</p>
+            </div>
             <div class="news"></div>
         </main>
-        <footer>
-            <p class="copyright">
-                Copyright <a href="https://newsapi.org">NewsAPI</a>
-            </p>
+
+        <footer class="footer">
+            <a class="footer__link footer__github" href="https://github.com/isaluk" target="_blank" rel="noopener noreferrer">
+                <svg class="footer__icon" width="31" height="30" viewBox="0 0 31 30" aria-label="GitHub" role="img">
+                    <path
+                        fill="currentColor"
+                        d="M15.5 0C6.93695 0 0 6.88305 0 15.3796C0 22.1843 4.43723 27.9335 10.5978 29.9706C11.3728 30.1048 11.663 29.6448 11.663 29.2407C11.663 28.8744 11.6447 27.6636 11.6447 26.3759C7.75 27.0876 6.7425 25.4336 6.4325 24.5695C6.25777 24.1263 5.5025 22.7618 4.84445 22.3968C4.30195 22.1074 3.52555 21.3972 4.82473 21.3776C6.045 21.358 6.91723 22.4919 7.2075 22.9547C8.6025 25.2798 10.8303 24.6269 11.7222 24.2228C11.8575 23.2231 12.2647 22.5506 12.71 22.1661C9.26055 21.7817 5.6575 20.4548 5.6575 14.5714C5.6575 12.8993 6.25777 11.5151 7.24695 10.4385C7.09055 10.054 6.54805 8.47833 7.40195 6.36294C7.40195 6.36294 8.69973 5.96028 11.663 7.94005C12.9248 7.59268 14.2286 7.41816 15.538 7.42134C16.857 7.42134 18.1745 7.59331 19.413 7.94005C22.3778 5.94071 23.6755 6.36294 23.6755 6.36294C24.528 8.47833 23.987 10.054 23.832 10.4385C24.8197 11.5151 25.42 12.8811 25.42 14.5714C25.42 20.4744 21.7972 21.7817 18.3478 22.1661C18.91 22.6471 19.3947 23.5699 19.3947 25.0114C19.3947 27.068 19.375 28.722 19.375 29.2407C19.375 29.6448 19.6653 30.1244 20.4403 29.9706C26.5628 27.9335 31 22.1661 31 15.3796C31 6.88305 24.0645 0 15.5 0Z"
+                    />
+                </svg>
+                isaluk
+            </a>
+            <div class="footer__copy">
+                <span class="footer__year">2026</span>
+                <p class="copyright">
+                    copyright <a href="https://newsapi.org" target="_blank" rel="noopener noreferrer">NewsAPI</a>
+                </p>
+            </div>
+            <a
+                class="footer__link footer__course"
+                href="https://rs.school/courses/javascript"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                <img
+                    class="footer__logo"
+                    src="https://rs.school/_next/static/media/rss-logo.c19ce1b4.svg"
+                    alt="RS School"
+                    width="40"
+                    height="40"
+                />
+                rs school × js course
+            </a>
         </footer>
 
         <template id="sourceItemTemp">
-            <div class="source__item">
+            <button class="source__item" type="button">
                 <span class="source__item-name"></span>
-            </div>
+            </button>
         </template>
 
         <template id="newsItemTemp">
-            <div class="news__item">
+            <article class="news__item">
                 <div class="news__meta">
                     <div class="news__meta-photo"></div>
-                    <ul class="news__meta-details">
-                        <li class="news__meta-author"></li>
-                        <li class="news__meta-date"></li>
-                    </ul>
                 </div>
                 <div class="news__description">
-                    <h2 class="news__description-title"></h2>
-                    <h3 class="news__description-source"></h3>
+                    <div class="news__top">
+                        <span class="news__number"></span>
+                        <span class="news__meta-date"></span>
+                    </div>
+                    <h3 class="news__description-title"></h3>
+                    <p class="news__description-source"></p>
                     <p class="news__description-content"></p>
-                    <p class="news__read-more">
-                        <a href="#">Read More</a>
-                    </p>
+                    <div class="news__bottom">
+                        <span class="news__meta-author"></span>
+                        <p class="news__read-more">
+                            <a href="#" target="_blank" rel="noopener noreferrer">read more ×</a>
+                        </p>
+                    </div>
                 </div>
-            </div>
+            </article>
         </template>
     </body>
 </html>
